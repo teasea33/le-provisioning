@@ -1,9 +1,9 @@
 from distutils.core import setup
 
 setup(
-    name='le-provisioning',
-    packages=['le-provisioning'],
-    version='0.1',
+    name='le_provisioning',
+    packages=['le_provisioning'],
+    version='0.2',
     description='A small set of scripts to install SSL certs on WHM using LetsEncrypt',
     author='Nick Bagley',
     author_email='nick@thrivehive.com',
