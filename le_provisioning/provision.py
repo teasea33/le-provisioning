@@ -1,6 +1,5 @@
 #!/usr/local/bin/python2.7
 import sys
-import xml.etree.ElementTree as ET
 import urllib
 import subprocess
 from subprocess import CalledProcessError, PIPE
@@ -67,22 +66,3 @@ def install_cert(domain):
         except CalledProcessError as e:
             out.write("FAILED INSTALLING CERT")
             return
-
-xml_data = ""
-
-while True:
-    line = sys.stdin.readline()
-    xml_data += line
-    if line == "</xml>":
-        break
-root = ET.fromstring(xml_data)
-
-# param0 is the domain that was called to be parked
-for param0 in root.iter("param0"):
-    domain = param0.text
-
-# dbowner should be the user who owns the domain
-for dbowner in root.iter("DBOWNER"):
-    user = dbowner.text
-
-provision_single_cert(user, domain)
