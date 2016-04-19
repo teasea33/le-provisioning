@@ -2,7 +2,9 @@
 import sys
 import urllib
 import subprocess
+import re
 from subprocess import CalledProcessError, PIPE
+
 sys.stdout = open('/var/log/le-provision.log', 'a')
 
 
@@ -21,9 +23,11 @@ def provision_single_cert(user, domain):
             return True
 
 
-# this relies on the install directory being the same as the domain name
-# several issues can arise here if we park the same domain a second time but
-# prepend www or something similar
+def renew_all_certs():
+    # we need to issue command and create the hook
+    command = "letsencrypt-auto renew --renew-hook RENEWCOMMANDHERE)"
+
+
 def install_cert(domain):
     certfile = "/etc/letsencrypt/live/{0}/cert.pem".format(domain)
     keyfile = "/etc/letsencrypt/live/{0}/privkey.pem".format(domain)
@@ -31,6 +35,13 @@ def install_cert(domain):
     certdata = None
     keydata = None
     cadata = None
+
+    p = re.compile(ur'[-][0-9]+$')
+
+    matches = re.findall(p, domain)
+    if len(matches) > 0:
+        domain = domain.replace(matches[0], "")
+
     try:
         with open(certfile) as myfile:
             certdata = myfile.read()
@@ -50,7 +61,7 @@ def install_cert(domain):
     except IOError as e:
         print("I/O error({0}): {1}".format(e.errno, e.strerror))
     print(cadata)
-    with open("/root/sub.txt", 'a') as out:
+    with open("/var/log/le_provision.log", 'a') as out:
         try:
             out.write(cadata)
             out.write(certdata)
