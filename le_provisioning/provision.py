@@ -61,7 +61,7 @@ def install_cert(domain):
     except IOError as e:
         print("I/O error({0}): {1}".format(e.errno, e.strerror))
     print(cadata)
-    with open("/var/log/le_provision.log", 'a') as out:
+    with open("/var/log/le-provision.log", 'a') as out:
         try:
             out.write(cadata)
             out.write(certdata)
